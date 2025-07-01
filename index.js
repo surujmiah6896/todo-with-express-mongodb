@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const todoRouter = require("./src/routes/todoRoute");
-const { validateTodo } = require("./src/Request/todoValidation");
+
 
 require("dotenv").config();
 
@@ -16,7 +16,7 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-app.use("/api/todos",validateTodo, todoRouter);
+app.use("/api/todos", todoRouter);
 
 app.get("/", (req, res) => {
   res.send("Wellcome to the Todo API");
