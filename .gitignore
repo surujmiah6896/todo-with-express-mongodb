@@ -3,8 +3,6 @@
 node_modules
 package-lock.json
 yarn.lock
-Dockerfile
 .env
 .env.example
 dist
-docker-compose.yml
