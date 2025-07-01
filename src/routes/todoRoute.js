@@ -34,28 +34,42 @@ todoRouter.post("/", validateTodo, async (req, res) => {
 
 // Update a todo by ID
 todoRouter.put("/:id",validateTodo, async (req, res) => {
-    const todoId = req.params.id;
-    const { title, description, completed } = req.body;
-    // update method one
-    try {
-        const updatedTodo = await Todo.findByIdAndUpdate(
-            todoId,
-            { title, description, completed },
-            { new: true }
-        );
-        if (!updatedTodo) {
-            return res.status(404).json({ message: "Todo not found" });
-        }
-        res.status(200).json({data: updatedTodo, message: "Todo updated successfully" });
-    } catch (error) {
-        console.error("Error updating todo:", error);
-        res.status(500).json({ message: "Error updating todo", error });
+  const todoId = req.params.id;
+  const { title, description, completed } = req.body;
+  // update method one
+  try {
+    const updatedTodo = await Todo.findByIdAndUpdate(
+      todoId,
+      { title, description, completed },
+      { new: true }
+    );
+    if (!updatedTodo) {
+      return res.status(404).json({ message: "Todo not found" });
     }
-
+    res
+      .status(200)
+      .json({ data: updatedTodo, message: "Todo updated successfully" });
+  } catch (error) {
+    console.error("Error updating todo:", error);
+    res.status(500).json({ message: "Error updating todo", error });
+  }
+  
 });
 
 // Delete a todo by ID
-todoRouter.delete("/:id", async (req, res) => {});
+todoRouter.delete("/:id", async (req, res) => {
+    const todoId = req.params.id;
+    try {
+        const deletedTodo = await Todo.findByIdAndDelete(todoId);
+        if (!deletedTodo) {
+            return res.status(404).json({ message: "Todo not found" });
+        }
+        res.status(200).json({ message: "Todo deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting todo:", error);
+        res.status(500).json({ message: "Error deleting todo", error });
+    }
+});
 
 
 // Get a todo by ID
