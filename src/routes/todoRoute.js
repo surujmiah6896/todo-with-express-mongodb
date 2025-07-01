@@ -14,6 +14,22 @@ todoRouter.get("/all", async (req, res) => {
     }
 });
 
+//filter todos by completed status
+todoRouter.get("/filter", async (req, res) => {
+    const { completed } = req.query;
+    if (completed === undefined) {
+        return res.status(400).json({ message: "Completed status is required" });
+    }
+    const isCompleted = completed === 'true';
+    try {
+        const todos = await Todo.find({ completed: isCompleted });
+        res.status(200).json({ todos, message: "Todos fetched successfully" });
+    } catch (error) {       
+        console.error("Error fetching todos:", error);
+        res.status(500).json({ message: "Error fetching todos", error });
+    }
+});
+
 // Create a new todo
 todoRouter.post("/", validateTodo, async (req, res) => {
     const { title, description } = req.body;
@@ -71,7 +87,6 @@ todoRouter.delete("/:id", async (req, res) => {
     }
 });
 
-
 // Get a todo by ID
 todoRouter.get("/:id", async (req, res) => {
     // Assuming req.params.id is the ID of the todo
@@ -84,5 +99,7 @@ todoRouter.get("/:id", async (req, res) => {
         return res.status(200).json({todo, message: "Todo fetched successfully" });
     } 
 });
+
+
 
 module.exports = todoRouter;
