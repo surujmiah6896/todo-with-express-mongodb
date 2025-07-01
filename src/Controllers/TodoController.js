@@ -74,3 +74,19 @@ TodoController.updateTodo = async (req, res) => {
   }
 };
 
+
+//Delete a todo by ID
+TodoController.deleteTodo = async (req, res) => {
+  const todoId = req.params.id;
+  try {
+    const deletedTodo = await Todo.findByIdAndDelete(todoId);
+    if (!deletedTodo) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+    res.status(200).json({ message: "Todo deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting todo:", error);
+    res.status(500).json({ message: "Error deleting todo", error });
+  }
+};
+
