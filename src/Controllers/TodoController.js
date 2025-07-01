@@ -10,7 +10,10 @@ const Todo = require('../Model/Todo');
 TodoController.getAllTodos = async (req, res) => {
   try {
     const todos = await Todo.find();
-    res.status(200).json(todos, { message: "Todos fetched successfully" });
+    res.status(200).json({
+      message: "Todos fetched successfully",
+      data: todos,
+    });
   } catch (error) {
     console.error("Error fetching todos:", error);
     res.status(500).json({ message: "Error fetching todos", error });
@@ -96,10 +99,16 @@ TodoController.getTodoById = async (req, res) => {
   // Assuming req.params.id is the ID of the todo
   const todoId = req.params.id;
   // Here you would typically fetch the todo from the database using the ID
-  const todo = await Todo.findById(todoId);
+  const todo = await Todo.findById(todoId).select({
+    _id: 1,
+    title: 1,
+  });
   if (!todo) {
     return res.status(404).json({ message: "Todo not found" });
   } else {
     return res.status(200).json({ todo, message: "Todo fetched successfully" });
   }
 };
+
+// Export the TodoController object
+module.exports = TodoController;
