@@ -33,13 +33,25 @@ todoRouter.post("/", validateTodo, async (req, res) => {
 });
 
 // Update a todo by ID
-todoRouter.put("/:id", async (req, res) => {});
+todoRouter.put("/:id", async (req, res) => {
+    console.log(req);
+});
 
 // Delete a todo by ID
 todoRouter.delete("/:id", async (req, res) => {});
 
 
 // Get a todo by ID
-todoRouter.get("/:id", async (req, res) => {});
+todoRouter.get("/:id", async (req, res) => {
+    // Assuming req.params.id is the ID of the todo
+    const todoId = req.params.id;
+    // Here you would typically fetch the todo from the database using the ID
+    const todo = await Todo.findById(todoId);
+    if (!todo) {
+        return res.status(404).json({ message: "Todo not found" });
+    }else{
+        return res.status(200).json({todo, message: "Todo fetched successfully" });
+    } 
+});
 
 module.exports = todoRouter;
