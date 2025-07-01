@@ -33,8 +33,25 @@ todoRouter.post("/", validateTodo, async (req, res) => {
 });
 
 // Update a todo by ID
-todoRouter.put("/:id", async (req, res) => {
-    console.log(req);
+todoRouter.put("/:id",validateTodo, async (req, res) => {
+    const todoId = req.params.id;
+    const { title, description, completed } = req.body;
+    // update method one
+    try {
+        const updatedTodo = await Todo.findByIdAndUpdate(
+            todoId,
+            { title, description, completed },
+            { new: true }
+        );
+        if (!updatedTodo) {
+            return res.status(404).json({ message: "Todo not found" });
+        }
+        res.status(200).json({data: updatedTodo, message: "Todo updated successfully" });
+    } catch (error) {
+        console.error("Error updating todo:", error);
+        res.status(500).json({ message: "Error updating todo", error });
+    }
+
 });
 
 // Delete a todo by ID
